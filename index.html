@@ -13,7 +13,6 @@
     </style>
 </head>
 <body>
-    <h1>Interactive Map of St. Maarten / St. Martin</h1>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="markers.js"></script> <!-- Include your markers data -->
@@ -25,6 +24,15 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
         }).addTo(map);
+
+        // Define the bounds of St. Maarten / St. Martin
+        var bounds = [
+            [18.01, -63.15],  // Southwest coordinates
+            [18.13, -62.97]   // Northeast coordinates
+        ];
+        
+        // Fit the map to the defined bounds
+        map.fitBounds(bounds);
 
         // Add markers with popups and links
         markers.forEach(function(marker) {
