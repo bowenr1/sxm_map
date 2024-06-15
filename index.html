@@ -110,7 +110,6 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
-        const weatherApiKey = 'e60426ef3c6491f3fe0e767644883aed';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
         // Add MapTiler layer with your specific map
@@ -126,13 +125,16 @@
         
         map.fitBounds(bounds);
 
-        // Add routing control
+        // Add routing control with Mapbox
         L.Routing.control({
             waypoints: [
                 L.latLng(18.0425, -63.0548), // Example start point
                 L.latLng(18.1325, -63.1400)  // Example end point
             ],
-            routeWhileDragging: true
+            routeWhileDragging: true,
+            serviceUrl: 'https://api.mapbox.com/directions/v5/mapbox/driving',
+            profile: 'mapbox/driving',
+            accessToken: 'your_mapbox_access_token'
         }).addTo(map);
 
         // Add heat map layer
@@ -149,21 +151,6 @@
             blur: 15,
             maxZoom: 17,
         }).addTo(map);
-
-        // Add weather overlay layer
-        var weatherLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=' + weatherApiKey, {
-            opacity: 0.5
-        }).addTo(map);
-
-        // Fetch and display current weather
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=18.0425&lon=-63.0548&appid=${weatherApiKey}`)
-            .then(response => response.json())
-            .then(data => {
-                var weatherInfo = `Weather: ${data.weather[0].description}<br>Temperature: ${(data.main.temp - 273.15).toFixed(2)}°C`;
-                L.marker([18.0425, -63.0548])
-                    .bindPopup(weatherInfo)
-                    .addTo(map);
-            });
 
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
