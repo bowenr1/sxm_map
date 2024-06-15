@@ -6,9 +6,12 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" />
     <style>
         html, body {
             margin: 0;
@@ -53,21 +56,23 @@
         .toggle-button.selected:hover {
             color: black; /* Black font on hover when selected */
         }
-        #locate-button {
+        #locate-button, #reset-view-button {
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-            background-color: white; /* Default white background */
-            color: black;
+            background: white;
+            padding: 10px;
             border: none;
             border-radius: 5px;
-            font-family: 'Karla', sans-serif; /* Karla font */
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            cursor: pointer;
             z-index: 1000; /* Ensure it stays above the map */
+            font-family: 'Karla', sans-serif; /* Karla font */
         }
-        #locate-button:hover {
+        #reset-view-button {
+            right: 90px; /* Position it next to the Locate Me button */
+        }
+        #locate-button:hover, #reset-view-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
         }
         /* Customize Leaflet popups */
@@ -83,7 +88,7 @@
             font-family: 'Karla', sans-serif;
         }
         .popup-title {
-            font-family: 'Barlow Condensed', sans-serif;
+            font-family: 'Karla', sans-serif;
             font-weight: 700;
             margin: 0;
             font-size: 20px; /* Increased font size */
@@ -95,14 +100,23 @@
             font-size: 14px;
         }
         .popup-link {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
+            font-family: 'Karla', sans-serif;
             font-size: 14px;
             color: black !important; /* Change to black */
             text-decoration: none !important; /* Remove underline */
             font-weight: bold; /* Make the link bold */
         }
         .popup-link:hover {
+            text-decoration: underline !important; /* Optionally add underline on hover */
+        }
+        .popup-email {
+            font-family: 'Karla', sans-serif;
+            font-size: 14px;
+            color: blue !important; /* Change to blue */
+            text-decoration: none !important; /* Remove underline */
+            font-weight: bold; /* Make the link bold */
+        }
+        .popup-email:hover {
             text-decoration: underline !important; /* Optionally add underline on hover */
         }
         .popup-image {
@@ -124,6 +138,11 @@
                 padding: 3px 5px;
                 font-size: 12px;
             }
+            #locate-button, #reset-view-button {
+                padding: 5px;
+                font-size: 12px;
+                top: 50px;
+            }
         }
     </style>
 </head>
@@ -136,6 +155,7 @@
         <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
     </div>
     <button id="locate-button">Locate Me</button>
+    <button id="reset-view-button">Reset View</button>
     <script src="markers.js"></script>
     <script>
         const map = L.map('map', {
@@ -167,61 +187,61 @@
         var pictureLayer = L.layerGroup();
         var videoLayer = L.layerGroup();
 
-        // Function to create markers and add them to the respective layer
-        function createMarkers(markerData, layer, icon) {
+        // Marker cluster group
+        var markers = L.markerClusterGroup();
+
+        // Function to create markers and add them to the marker cluster group
+        function createMarkers(markerData, icon) {
             markerData.forEach(function(marker) {
                 var popupContent = `
                     <div class="popup-content">
                         <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
                         <h3 class="popup-title">${marker.title}</h3>
-                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
+                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 20).join(" ")}...</p>
                         <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
+                        <p><a href="mailto:info@example.com?subject=More%20Info%20About%20${marker.title}" class="popup-email">Contact Us</a></p>
                     </div>
                 `;
-                
-                var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent).addTo(layer);
-
-                markerInstance.on('popupopen', function(e) {
-                    var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
-                    px.y -= e.popup._container.clientHeight / 2; // adjust for the height of the popup container
-                    map.panTo(map.unproject(px), {animate: true}); // pan to new center
-                });
+                var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent);
+                markers.addLayer(markerInstance);
             });
         }
 
         // Create markers for each layer
-        createMarkers(articleMarkers, articleLayer, icons.articles);
-        createMarkers(pictureMarkers, pictureLayer, icons.pictures);
-        createMarkers(videoMarkers, videoLayer, icons.videos);
+        createMarkers(articleMarkers, icons.articles);
+        createMarkers(pictureMarkers, icons.pictures);
+        createMarkers(videoMarkers, icons.videos);
+
+        // Add the marker cluster group to the map
+        map.addLayer(markers);
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
             // Remove all layers
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
-                    map.removeLayer(layer);
-                }
-            });
+            markers.clearLayers();
 
             // Add the selected layers
             switch (type) {
                 case 'all':
-                    articleLayer.addTo(map);
-                    pictureLayer.addTo(map);
-                    videoLayer.addTo(map);
+                    createMarkers(articleMarkers, icons.articles);
+                    createMarkers(pictureMarkers, icons.pictures);
+                    createMarkers(videoMarkers, icons.videos);
                     break;
                 case 'articles':
-                    articleLayer.addTo(map);
+                    createMarkers(articleMarkers, icons.articles);
                     break;
                 case 'pictures':
-                    pictureLayer.addTo(map);
+                    createMarkers(pictureMarkers, icons.pictures);
                     break;
                 case 'videos':
-                    videoLayer.addTo(map);
+                    createMarkers(videoMarkers, icons.videos);
                     break;
                 // Add cases for other marker types as needed
             }
+
+            // Add the marker cluster group to the map
+            map.addLayer(markers);
 
             // Update button states
             var buttons = document.querySelectorAll('.toggle-button');
@@ -247,6 +267,11 @@
         map.on('locationerror', function() {
             alert('Location access denied.');
         });
+
+        // Reset view functionality
+        document.getElementById('reset-view-button').onclick = function() {
+            map.setView([18.075, -63.05], 13);
+        };
     </script>
 </body>
 </html>
