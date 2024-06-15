@@ -138,9 +138,9 @@
                 this._accessToken = accessToken;
             },
             route: function (waypoints, callback, context, options) {
-                var url = this.options.serviceUrl + '/' + this.options.profile + '/' + waypoints.map(function (wp) {
+                var url = this.options.serviceUrl + '/' + waypoints.map(function (wp) {
                     return wp.latLng.lng + ',' + wp.latLng.lat;
-                }).join(';') + '?access_token=' + this._accessToken;
+                }).join(';') + '?access_token=' + this._accessToken + '&geometries=geojson';
 
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', url, true);
