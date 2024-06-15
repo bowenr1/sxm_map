@@ -35,11 +35,14 @@
             margin: 5px 0;
             padding: 5px 10px;
             cursor: pointer;
-            background-color: black; /* Black background */
+            background-color: grey; /* Default grey background */
             color: white;
             border: none;
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
+        }
+        .toggle-button.selected {
+            background-color: black; /* Black background for selected */
         }
         .toggle-button:hover {
             background-color: #333; /* Darker background on hover */
@@ -137,11 +140,14 @@
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
+            // Remove all layers
             map.eachLayer(function (layer) {
                 if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
                     map.removeLayer(layer);
                 }
             });
+
+            // Add the selected layers
             switch (type) {
                 case 'all':
                     articleLayer.addTo(map);
@@ -155,9 +161,16 @@
                     break;
                 // Add cases for other marker types as needed
             }
+
+            // Update button states
+            var buttons = document.querySelectorAll('.toggle-button');
+            buttons.forEach(function(button) {
+                button.classList.remove('selected');
+            });
+            document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
         }
 
-        // Initially add all layers to the map
+        // Initially add all layers to the map and set the "All" button as selected
         toggleMarkers('all');
     </script>
 </body>
