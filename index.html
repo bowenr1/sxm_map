@@ -6,8 +6,9 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -15,48 +16,49 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            overflow: hidden; /* Hide scrollbars for the entire page */
         }
         #map {
             height: 100vh;
             width: 100vw;
-            overflow: hidden;
+            overflow: hidden; /* Ensure no scrollbars appear */
         }
         .toggle-buttons {
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 1000;
-            background: white;
+            background: white; /* White background */
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            font-family: 'Karla', sans-serif;
+            font-family: 'Karla', sans-serif; /* Karla font */
         }
         .toggle-button {
             display: block;
             margin: 5px 0;
             padding: 5px 10px;
             cursor: pointer;
-            background-color: grey;
+            background-color: grey; /* Default grey background */
             color: white;
             border: none;
             border-radius: 5px;
-            font-family: 'Karla', sans-serif;
+            font-family: 'Karla', sans-serif; /* Karla font */
         }
         .toggle-button.selected {
-            background-color: black;
+            background-color: black; /* Black background for selected */
         }
         .toggle-button:hover {
-            background-color: #333;
+            background-color: #333; /* Darker background on hover */
         }
+        /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
-            background-color: #f9f9f9;
-            color: #333;
-            border-radius: 10px;
-            border: 2px solid #333;
-            width: 250px;
-            max-width: 300px;
+            background-color: #f9f9f9; /* Background color */
+            color: #333; /* Text color */
+            border-radius: 10px; /* Rounded corners */
+            border: 2px solid #333; /* Border color and width */
+            width: 250px; /* Fixed width */
+            max-width: 300px; /* Maximum width */
         }
         .leaflet-popup-content {
             font-family: 'Karla', sans-serif;
@@ -65,8 +67,8 @@
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 700;
             margin: 0;
-            font-size: 20px;
-            text-transform: uppercase;
+            font-size: 20px; /* Increased font size */
+            text-transform: uppercase; /* Make title uppercase */
         }
         .popup-excerpt, .popup-tags {
             font-family: 'Karla', sans-serif;
@@ -77,12 +79,12 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             font-size: 14px;
-            color: black !important;
-            text-decoration: none !important;
-            font-weight: bold;
+            color: black !important; /* Change to black */
+            text-decoration: none !important; /* Remove underline */
+            font-weight: bold; /* Make the link bold */
         }
         .popup-link:hover {
-            text-decoration: underline !important;
+            text-decoration: underline !important; /* Optionally add underline on hover */
         }
         .popup-image {
             width: 100%;
@@ -104,102 +106,90 @@
     </div>
     <script src="markers.js"></script>
     <script>
-        // Initialize Mapbox map
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYm93cGx1IiwiYSI6ImNseGdjeTl6azEybmIyaW9ueHBudHllejYifQ.PCgeIsjz_AAa3f-JSU9ZyQ';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11', // Mapbox style URL
-            center: [-63.0548, 18.0425],
-            zoom: 12
-        });
+        const key = 'MlSSOtnP7BKLPGqmyOBa';
+        const map = L.map('map').setView([18.0425, -63.0548], 12);
+        
+        // Add MapTiler layer with your specific map
+        const mtLayer = L.maptilerLayer({
+            apiKey: key,
+            style: 'c7ddf263-2f1f-4e5c-8713-4642a84b774c' // Your specific map style ID
+        }).addTo(map);
 
-        map.on('load', function () {
-            // Add heatmap layer for articleMarkers
-            map.addSource('articles', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: articleMarkers.map(marker => ({
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [marker.lng, marker.lat]
-                        },
-                        properties: {
-                            title: marker.title
-                        }
-                    }))
-                }
+        const bounds = [
+            [18.01, -63.15],
+            [18.13, -62.97]
+        ];
+        
+        map.fitBounds(bounds);
+
+        // Create layer groups for each marker type
+        var articleLayer = L.layerGroup();
+        var pictureLayer = L.layerGroup();
+        var soundLayer = L.layerGroup();
+        var videoLayer = L.layerGroup();
+        var wildlifeLayer = L.layerGroup();
+        var beachLayer = L.layerGroup();
+
+        // Function to create markers and add them to the respective layer
+        function createMarkers(markerData, layer) {
+            markerData.forEach(function(marker) {
+                var popupContent = `
+                    <div class="popup-content">
+                        <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
+                        <h3 class="popup-title">${marker.title}</h3>
+                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
+                        <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
+                        <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
+                    </div>
+                `;
+                L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
             });
+        }
 
-            map.addLayer({
-                id: 'articles-heat',
-                type: 'heatmap',
-                source: 'articles',
-                maxzoom: 15,
-                paint: {
-                    'heatmap-weight': {
-                        property: 'title',
-                        type: 'exponential',
-                        stops: [
-                            [0, 0],
-                            [5, 2]
-                        ]
-                    },
-                    'heatmap-intensity': {
-                        stops: [
-                            [0, 1],
-                            [15, 3]
-                        ]
-                    },
-                    'heatmap-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['heatmap-density'],
-                        0, 'rgba(33,102,172,0)',
-                        0.2, 'rgb(103,169,207)',
-                        0.4, 'rgb(209,229,240)',
-                        0.6, 'rgb(253,219,199)',
-                        0.8, 'rgb(239,138,98)',
-                        1, 'rgb(178,24,43)'
-                    ],
-                    'heatmap-radius': {
-                        stops: [
-                            [0, 2],
-                            [15, 20]
-                        ]
-                    },
-                    'heatmap-opacity': {
-                        default: 1,
-                        stops: [
-                            [14, 1],
-                            [15, 0]
-                        ]
-                    }
-                }
-            });
+        // Create markers for each layer
+        createMarkers(articleMarkers, articleLayer);
+        createMarkers(pictureMarkers, pictureLayer);
+        createMarkers(soundMarkers, soundLayer);
+        createMarkers(videoMarkers, videoLayer);
+        createMarkers(wildlifeMarkers, wildlifeLayer);
+        createMarkers(beachMarkers, beachLayer);
 
-            // Initially show all layers and set the "All" button as selected
-            toggleMarkers('all');
-        });
-
-        // Functions to toggle markers (assuming they are already created and stored in layer groups)
+        // Function to toggle marker layers
         function toggleMarkers(type) {
-            // Hide all layers
-            const layers = ['articles-heat']; // Add other layers if needed
-            layers.forEach(layer => {
-                map.setLayoutProperty(layer, 'visibility', 'none');
+            // Remove all layers
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
+                    map.removeLayer(layer);
+                }
             });
 
-            // Show the selected layer
+            // Add the selected layers
             switch (type) {
                 case 'all':
-                    layers.forEach(layer => {
-                        map.setLayoutProperty(layer, 'visibility', 'visible');
-                    });
+                    articleLayer.addTo(map);
+                    pictureLayer.addTo(map);
+                    soundLayer.addTo(map);
+                    videoLayer.addTo(map);
+                    wildlifeLayer.addTo(map);
+                    beachLayer.addTo(map);
                     break;
                 case 'articles':
-                    map.setLayoutProperty('articles-heat', 'visibility', 'visible');
+                    articleLayer.addTo(map);
+                    break;
+                case 'pictures':
+                    pictureLayer.addTo(map);
+                    break;
+                case 'sounds':
+                    soundLayer.addTo(map);
+                    break;
+                case 'videos':
+                    videoLayer.addTo(map);
+                    break;
+                case 'wildlife':
+                    wildlifeLayer.addTo(map);
+                    break;
+                case 'beaches':
+                    beachLayer.addTo(map);
                     break;
                 // Add cases for other marker types as needed
             }
@@ -211,6 +201,9 @@
             });
             document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
         }
+
+        // Initially add all layers to the map and set the "All" button as selected
+        toggleMarkers('all');
     </script>
 </body>
 </html>
