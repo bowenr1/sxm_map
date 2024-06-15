@@ -12,7 +12,6 @@
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine-mapbox/0.3.0/leaflet-routing-machine-mapbox.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
@@ -188,11 +187,12 @@
         // Function to toggle marker layers
         function toggleMarkers(type) {
             // Remove all layers
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
-                    map.removeLayer(layer);
-                }
-            });
+            articleLayer.remove();
+            pictureLayer.remove();
+            soundLayer.remove();
+            videoLayer.remove();
+            wildlifeLayer.remove();
+            beachLayer.remove();
 
             // Add the selected layers
             switch (type) {
