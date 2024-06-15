@@ -8,7 +8,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
-    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -91,6 +90,10 @@
             height: auto;
             margin-bottom: 10px;
         }
+        /* Ensure popups have a higher z-index */
+        .leaflet-popup {
+            z-index: 1100 !important;
+        }
     </style>
 </head>
 <body>
@@ -142,7 +145,14 @@
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
                     </div>
                 `;
-                L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
+                
+                var markerInstance = L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
+
+                markerInstance.on('popupopen', function(e) {
+                    var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+                    px.y -= e.popup._container.clientHeight/2 // find the height of the popup container, divide by 2, and subtract from the Y axis of the popup anchor
+                    map.panTo(map.unproject(px), {animate: true}); // pan to new center
+                });
             });
         }
 
