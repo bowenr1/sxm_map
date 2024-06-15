@@ -12,6 +12,10 @@
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.1/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.1/mapbox-gl-directions.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -126,18 +130,16 @@
         
         map.fitBounds(bounds);
 
-        // Add routing control with Mapbox
-        L.Routing.control({
-            waypoints: [
-                L.latLng(18.0425, -63.0548), // Example start point
-                L.latLng(18.1325, -63.1400)  // Example end point
-            ],
-            routeWhileDragging: true,
-            serviceUrl: `https://api.mapbox.com/directions/v5/mapbox/driving`,
-            profile: 'mapbox/driving',
+        // Initialize Mapbox Directions
+        mapboxgl.accessToken = mapboxAccessToken;
+        const directions = new MapboxDirections({
             accessToken: mapboxAccessToken,
-            useHints: false
-        }).addTo(map);
+            unit: 'metric',
+            profile: 'mapbox/driving'
+        });
+
+        // Add Mapbox Directions control to the map
+        map.addControl(directions, 'top-left');
 
         // Add heat map layer
         var heatData = [
