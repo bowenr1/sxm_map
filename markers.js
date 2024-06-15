@@ -5,7 +5,8 @@ var markers = [
         title: "Updated Article 1 Title",
         excerpt: "This is an excerpt for Article 1.",
         tags: "tag1, tag2, tag3",
-        url: "https://example.com/article1"
+        url: "https://example.com/article1",
+        imageUrl: "https://example.com/image1.jpg"
     },
     {
         lat: 18.0500,
@@ -13,6 +14,7 @@ var markers = [
         title: "Article 2",
         excerpt: "This is an excerpt for Article 2.",
         tags: "tag4, tag5",
-        url: "https://example.com/article2"
+        url: "https://example.com/article2",
+        imageUrl: "https://example.com/image2.jpg"
     }
 ];
