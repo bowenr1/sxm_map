@@ -19,6 +19,26 @@
             width: 100vw;
             overflow: hidden; /* Ensure no scrollbars appear */
         }
+        .toggle-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .toggle-button {
+            display: block;
+            margin: 5px 0;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
             background-color: #f9f9f9; /* Background color */
@@ -63,47 +83,72 @@
 </head>
 <body>
     <div id="map"></div>
+    <div class="toggle-buttons">
+        <button class="toggle-button" onclick="toggleMarkers('articles')">Articles</button>
+        <button class="toggle-button" onclick="toggleMarkers('pictures')">Pictures</button>
+        <!-- Add more buttons for other marker types as needed -->
+    </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="markers.js"></script>
     <script>
-        // Initialize the map
         var map = L.map('map').setView([18.0425, -63.0548], 12);
 
-        // Set up the OpenStreetMap layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
         }).addTo(map);
 
-        // Define the bounds of St. Maarten / St. Martin
         var bounds = [
-            [18.01, -63.15],  // Southwest coordinates
-            [18.13, -62.97]   // Northeast coordinates
+            [18.01, -63.15],
+            [18.13, -62.97]
         ];
-
-        // Fit the map to the defined bounds
+        
         map.fitBounds(bounds);
 
-        // Add markers with popups and links
-        markers.forEach(function(marker) {
-            var popupContent = `
-                <div class="popup-content">
-                    <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
-                    <h3 class="popup-title">${marker.title}</h3>
-                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 15).join(" ")}...</p>
-                    <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
-                    <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
-                </div>
-            `;
+        // Create layer groups for each marker type
+        var articleLayer = L.layerGroup();
+        var pictureLayer = L.layerGroup();
 
-            var markerInstance = L.marker([marker.lat, marker.lng])
-                                 .bindPopup(popupContent)
-                                 .addTo(map);
-
-            markerInstance.on('click', function(e) {
-                this.openPopup();
+        // Function to create markers and add them to the respective layer
+        function createMarkers(markerData, layer) {
+            markerData.forEach(function(marker) {
+                var popupContent = `
+                    <div class="popup-content">
+                        <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
+                        <h3 class="popup-title">${marker.title}</h3>
+                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
+                        <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
+                        <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
+                    </div>
+                `;
+                L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
             });
-        });
+        }
+
+        // Create markers for each layer
+        createMarkers(articleMarkers, articleLayer);
+        createMarkers(pictureMarkers, pictureLayer);
+
+        // Initially add one layer to the map
+        articleLayer.addTo(map);
+
+        // Function to toggle marker layers
+        function toggleMarkers(type) {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
+                    map.removeLayer(layer);
+                }
+            });
+            switch (type) {
+                case 'articles':
+                    articleLayer.addTo(map);
+                    break;
+                case 'pictures':
+                    pictureLayer.addTo(map);
+                    break;
+                // Add cases for other marker types as needed
+            }
+        }
     </script>
 </body>
 </html>
