@@ -143,12 +143,16 @@
                     </div>
                 `;
                 
-                var markerInstance = L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
+                var markerInstance = L.marker([marker.lat, marker.lng], {
+                    autoPan: true,
+                    autoPanPaddingTopLeft: [50, 50],
+                    autoPanPaddingBottomRight: [50, 50]
+                }).bindPopup(popupContent).addTo(layer);
 
                 markerInstance.on('popupopen', function(e) {
                     var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
-                    px.y -= e.popup._container.clientHeight/2; // find the height of the popup container, divide by 2, and subtract from the Y axis of the popup anchor
-                    px.x -= e.popup._container.clientWidth/2; // find the width of the popup container, divide by 2, and subtract from the X axis of the popup anchor
+                    px.y -= e.popup._container.clientHeight / 2; // adjust for the height of the popup container
+                    px.x -= e.popup._container.clientWidth / 2; // adjust for the width of the popup container
                     map.panTo(map.unproject(px), {animate: true}); // pan to new center
                 });
             });
