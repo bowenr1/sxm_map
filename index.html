@@ -32,19 +32,14 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             display: flex;
             gap: 5px;
-            flex-wrap: wrap;
-            justify-content: center;
         }
         .toggle-button {
-            padding: 10px 15px;
+            padding: 5px 10px;
             cursor: pointer;
             background-color: grey; /* Default grey background */
             color: white;
             border: none;
             border-radius: 5px;
-            margin: 5px 0;
-            font-family: 'Karla', sans-serif; /* Karla font */
-            font-size: 1rem;
         }
         .toggle-button.selected {
             background-color: black; /* Black background for selected */
@@ -95,12 +90,6 @@
         /* Ensure popups have a higher z-index */
         .leaflet-popup {
             z-index: 1100 !important;
-        }
-        @media (max-width: 768px) {
-            .toggle-button {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
@@ -179,29 +168,46 @@
                 }
             });
 
-            const layers = {
-                'all': [articleLayer, pictureLayer, soundLayer, videoLayer, wildlifeLayer, beachLayer],
-                'articles': [articleLayer],
-                'pictures': [pictureLayer],
-                'sounds': [soundLayer],
-                'videos': [videoLayer],
-                'wildlife': [wildlifeLayer],
-                'beaches': [beachLayer]
-            };
+            switch (type) {
+                case 'all':
+                    articleLayer.addTo(map);
+                    pictureLayer.addTo(map);
+                    soundLayer.addTo(map);
+                    videoLayer.addTo(map);
+                    wildlifeLayer.addTo(map);
+                    beachLayer.addTo(map);
+                    break;
+                case 'articles':
+                    articleLayer.addTo(map);
+                    break;
+                case 'pictures':
+                    pictureLayer.addTo(map);
+                    break;
+                case 'sounds':
+                    soundLayer.addTo(map);
+                    break;
+                case 'videos':
+                    videoLayer.addTo(map);
+                    break;
+                case 'wildlife':
+                    wildlifeLayer.addTo(map);
+                    break;
+                case 'beaches':
+                    beachLayer.addTo(map);
+                    break;
+                // Add cases for other marker types as needed
+            }
 
-            layers[type].forEach(layer => layer.addTo(map));
-
-            document.querySelectorAll('.toggle-button').forEach(button => button.classList.remove('selected'));
-            document.querySelector(`.toggle-button[onclick="toggleMarkers('${type}')"]`).classList.add('selected');
+            // Update button states
+            var buttons = document.querySelectorAll('.toggle-button');
+            buttons.forEach(function(button) {
+                button.classList.remove('selected');
+            });
+            document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
         }
 
         // Initially add all layers to the map and set the "All" button as selected
         toggleMarkers('all');
-
-        // Adjust map view when device orientation changes
-        window.addEventListener("orientationchange", function() {
-            map.invalidateSize();
-        });
     </script>
 </body>
 </html>
