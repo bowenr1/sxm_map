@@ -95,7 +95,10 @@
         <button class="toggle-button" onclick="toggleMarkers('all')">All</button>
         <button class="toggle-button" onclick="toggleMarkers('articles')">Articles</button>
         <button class="toggle-button" onclick="toggleMarkers('pictures')">Pictures</button>
-        <!-- Add more buttons for other marker types as needed -->
+        <button class="toggle-button" onclick="toggleMarkers('sounds')">Sounds</button>
+        <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
+        <button class="toggle-button" onclick="toggleMarkers('wildlife')">Wildlife</button>
+        <button class="toggle-button" onclick="toggleMarkers('beaches')">Beaches</button>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="markers.js"></script>
@@ -117,6 +120,10 @@
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
         var pictureLayer = L.layerGroup();
+        var soundLayer = L.layerGroup();
+        var videoLayer = L.layerGroup();
+        var wildlifeLayer = L.layerGroup();
+        var beachLayer = L.layerGroup();
 
         // Function to create markers and add them to the respective layer
         function createMarkers(markerData, layer) {
@@ -137,6 +144,10 @@
         // Create markers for each layer
         createMarkers(articleMarkers, articleLayer);
         createMarkers(pictureMarkers, pictureLayer);
+        createMarkers(soundMarkers, soundLayer);
+        createMarkers(videoMarkers, videoLayer);
+        createMarkers(wildlifeMarkers, wildlifeLayer);
+        createMarkers(beachMarkers, beachLayer);
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
@@ -152,12 +163,28 @@
                 case 'all':
                     articleLayer.addTo(map);
                     pictureLayer.addTo(map);
+                    soundLayer.addTo(map);
+                    videoLayer.addTo(map);
+                    wildlifeLayer.addTo(map);
+                    beachLayer.addTo(map);
                     break;
                 case 'articles':
                     articleLayer.addTo(map);
                     break;
                 case 'pictures':
                     pictureLayer.addTo(map);
+                    break;
+                case 'sounds':
+                    soundLayer.addTo(map);
+                    break;
+                case 'videos':
+                    videoLayer.addTo(map);
+                    break;
+                case 'wildlife':
+                    wildlifeLayer.addTo(map);
+                    break;
+                case 'beaches':
+                    beachLayer.addTo(map);
                     break;
                 // Add cases for other marker types as needed
             }
