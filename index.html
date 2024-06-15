@@ -9,6 +9,9 @@
     <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
     <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -107,6 +110,7 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
+        const weatherApiKey = 'e60426ef3c6491f3fe0e767644883aed';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
         // Add MapTiler layer with your specific map
@@ -121,6 +125,45 @@
         ];
         
         map.fitBounds(bounds);
+
+        // Add routing control
+        L.Routing.control({
+            waypoints: [
+                L.latLng(18.0425, -63.0548), // Example start point
+                L.latLng(18.1325, -63.1400)  // Example end point
+            ],
+            routeWhileDragging: true
+        }).addTo(map);
+
+        // Add heat map layer
+        var heatData = [
+            [18.0425, -63.0548, 0.5], // Example data points
+            [18.1325, -63.1400, 0.8],
+            [18.0725, -63.0800, 0.6],
+            [18.1125, -63.1200, 0.9],
+            [18.1525, -63.1600, 0.7]
+        ];
+
+        var heat = L.heatLayer(heatData, {
+            radius: 25,
+            blur: 15,
+            maxZoom: 17,
+        }).addTo(map);
+
+        // Add weather overlay layer
+        var weatherLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=' + weatherApiKey, {
+            opacity: 0.5
+        }).addTo(map);
+
+        // Fetch and display current weather
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=18.0425&lon=-63.0548&appid=${weatherApiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                var weatherInfo = `Weather: ${data.weather[0].description}<br>Temperature: ${(data.main.temp - 273.15).toFixed(2)}°C`;
+                L.marker([18.0425, -63.0548])
+                    .bindPopup(weatherInfo)
+                    .addTo(map);
+            });
 
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
