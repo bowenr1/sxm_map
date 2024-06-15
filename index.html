@@ -110,6 +110,7 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
+        const mapboxAccessToken = 'pk.eyJ1IjoiYm93cGx1IiwiYSI6ImNseGdjeTl6azEybmIyaW9ueHBudHllejYifQ.PCgeIsjz_AAa3f-JSU9ZyQ';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
         // Add MapTiler layer with your specific map
@@ -132,9 +133,10 @@
                 L.latLng(18.1325, -63.1400)  // Example end point
             ],
             routeWhileDragging: true,
-            serviceUrl: 'https://api.mapbox.com/directions/v5/mapbox/driving',
+            serviceUrl: `https://api.mapbox.com/directions/v5/mapbox/driving`,
             profile: 'mapbox/driving',
-            accessToken: 'your_mapbox_access_token'
+            accessToken: mapboxAccessToken,
+            useHints: false
         }).addTo(map);
 
         // Add heat map layer
