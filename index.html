@@ -38,8 +38,11 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             font-size: 14px;
-            color: black; /* Changed to black */
-            text-decoration: none;
+            color: black; /* Change to black */
+            text-decoration: none; /* Remove underline */
+        }
+        .popup-link:hover {
+            text-decoration: underline; /* Optionally add underline on hover */
         }
     </style>
 </head>
@@ -71,9 +74,9 @@
             var popupContent = `
                 <div class="popup-content">
                     <h3 class="popup-title">${marker.title}</h3>
-                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
+                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 15).join(" ")}...</p>
                     <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
-                    <p><a href="${marker.url}" target="_blank" class="popup-link">Read more</a></p>
+                    <p><a href="${marker.url}" target="_blank" class="popup-link">Read More</a></p>
                 </div>
             `;
 
