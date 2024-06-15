@@ -25,7 +25,7 @@
             width: 100vw;
             overflow: hidden; /* Ensure no scrollbars appear */
         }
-        .toggle-buttons {
+        .toggle-buttons, .layer-buttons {
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -37,7 +37,7 @@
             gap: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button {
+        .toggle-button, .layer-button {
             padding: 5px 10px;
             cursor: pointer;
             background-color: white; /* Default white background */
@@ -46,14 +46,14 @@
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button.selected {
+        .toggle-button.selected, .layer-button.selected {
             background-color: black; /* Black background for selected */
             color: white;
         }
-        .toggle-button:hover {
+        .toggle-button:hover, .layer-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
         }
-        .toggle-button.selected:hover {
+        .toggle-button.selected:hover, .layer-button.selected:hover {
             color: black; /* Black font on hover when selected */
         }
         .control-buttons {
@@ -125,11 +125,11 @@
         }
         /* Responsive design for smaller screens */
         @media (max-width: 768px) {
-            .toggle-buttons {
+            .toggle-buttons, .layer-buttons {
                 padding: 5px;
                 gap: 2px;
             }
-            .toggle-button {
+            .toggle-button, .layer-button {
                 padding: 3px 5px;
                 font-size: 12px;
             }
@@ -148,6 +148,11 @@
         <button class="toggle-button" onclick="toggleMarkers('pictures')">Photos</button>
         <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
     </div>
+    <div class="layer-buttons">
+        <button class="layer-button selected" onclick="setMapLayer('streets')">Streets</button>
+        <button class="layer-button" onclick="setMapLayer('satellite')">Satellite</button>
+        <button class="layer-button" onclick="setMapLayer('terrain')">Terrain</button>
+    </div>
     <div class="control-buttons">
         <button id="locate-button" class="control-button">Locate Me</button>
         <button id="reset-view-button" class="control-button">Reset View</button>
@@ -163,10 +168,33 @@
             attributionControl: false // Disable the attribution control
         }).setView([18.075, -63.05], 13); // Centered on St. Martin
 
-        // Add a basic map layer (OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        }).addTo(map);
+        // Define tile layers for different map styles
+        const layers = {
+            streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }),
+            satellite: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17
+            }),
+            terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17
+            })
+        };
+
+        // Add default tile layer
+        layers.streets.addTo(map);
+
+        // Function to change the map layer
+        function setMapLayer(layer) {
+            Object.values(layers).forEach(lyr => map.removeLayer(lyr));
+            layers[layer].addTo(map);
+
+            // Update button states
+            document.querySelectorAll('.layer-button').forEach(button => {
+                button.classList.remove('selected');
+            });
+            document.querySelector(`.layer-button[onclick="setMapLayer('${layer}')"]`).classList.add('selected');
+        }
 
         // Add fullscreen control to the map
         L.control.fullscreen().addTo(map);
