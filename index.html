@@ -107,12 +107,12 @@
     <script>
         const map = L.map('map', {
             maxBounds: [
-                [18.0, -63.2], // Southwest corner
-                [18.2, -62.9]  // Northeast corner
+                [17.95, -63.25], // Southwest corner
+                [18.15, -62.85]  // Northeast corner
             ],
             maxBoundsViscosity: 1.0
-        }).setView([18.0425, -63.0548], 12);
-        
+        }).setView([18.075, -63.05], 13); // Centered on St. Martin
+
         // Add a basic map layer (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
