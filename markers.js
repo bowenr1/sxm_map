@@ -40,4 +40,86 @@ var pictureMarkers = [
     }
 ];
 
-// Similarly define other groups like soundMarkers, videoMarkers, etc.
+var soundMarkers = [
+    {
+        lat: 18.0825,
+        lng: -63.0900,
+        title: "Sound 1",
+        excerpt: "This is a sound description.",
+        tags: "audio, music",
+        url: "https://example.com/sound1",
+        imageUrl: "https://example.com/sound1.jpg"
+    },
+    {
+        lat: 18.0925,
+        lng: -63.1000,
+        title: "Sound 2",
+        excerpt: "This is another sound description.",
+        tags: "audio, music",
+        url: "https://example.com/sound2",
+        imageUrl: "https://example.com/sound2.jpg"
+    }
+];
+
+var videoMarkers = [
+    {
+        lat: 18.1025,
+        lng: -63.1100,
+        title: "Video 1",
+        excerpt: "This is a video description.",
+        tags: "video, clip",
+        url: "https://example.com/video1",
+        imageUrl: "https://example.com/video1.jpg"
+    },
+    {
+        lat: 18.1125,
+        lng: -63.1200,
+        title: "Video 2",
+        excerpt: "This is another video description.",
+        tags: "video, clip",
+        url: "https://example.com/video2",
+        imageUrl: "https://example.com/video2.jpg"
+    }
+];
+
+var wildlifeMarkers = [
+    {
+        lat: 18.1225,
+        lng: -63.1300,
+        title: "Wildlife 1",
+        excerpt: "This is a wildlife description.",
+        tags: "animal, nature",
+        url: "https://example.com/wildlife1",
+        imageUrl: "https://example.com/wildlife1.jpg"
+    },
+    {
+        lat: 18.1325,
+        lng: -63.1400,
+        title: "Wildlife 2",
+        excerpt: "This is another wildlife description.",
+        tags: "animal, nature",
+        url: "https://example.com/wildlife2",
+        imageUrl: "https://example.com/wildlife2.jpg"
+    }
+];
+
+var beachMarkers = [
+    {
+        lat: 18.1425,
+        lng: -63.1500,
+        title: "Beach 1",
+        excerpt: "This is a beach description.",
+        tags: "sand, sea",
+        url: "https://example.com/beach1",
+        imageUrl: "https://example.com/beach1.jpg"
+    },
+    {
+        lat: 18.1525,
+        lng: -63.1600,
+        title: "Beach 2",
+        excerpt: "This is another beach description.",
+        tags: "sand, sea",
+        url: "https://example.com/beach2",
+        imageUrl: "https://example.com/beach2.jpg"
+    }
+];
