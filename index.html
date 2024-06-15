@@ -33,6 +33,7 @@
             font-family: 'Karla', sans-serif; /* Karla font */
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
         .toggle-button {
             padding: 5px 10px;
@@ -42,6 +43,8 @@
             border: none;
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
+            flex: 1 1 auto;
+            text-align: center;
         }
         .toggle-button.selected {
             background-color: black; /* Black background for selected */
@@ -92,6 +95,18 @@
         /* Ensure popups have a higher z-index */
         .leaflet-popup {
             z-index: 1100 !important;
+        }
+        @media (max-width: 600px) {
+            .toggle-buttons {
+                flex-direction: column;
+                align-items: center;
+                padding: 5px;
+            }
+            .toggle-button {
+                flex: none;
+                margin: 5px 0;
+                width: 80%;
+            }
         }
     </style>
 </head>
