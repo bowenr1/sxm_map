@@ -25,7 +25,7 @@
             width: 100vw;
             overflow: hidden; /* Ensure no scrollbars appear */
         }
-        .toggle-buttons, .control-buttons {
+        .toggle-buttons {
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -37,7 +37,7 @@
             gap: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button, .control-button {
+        .toggle-button {
             padding: 5px 10px;
             cursor: pointer;
             background-color: white; /* Default white background */
@@ -46,15 +46,37 @@
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button.selected, .control-button.selected {
+        .toggle-button.selected {
             background-color: black; /* Black background for selected */
             color: white;
         }
-        .toggle-button:hover, .control-button:hover {
+        .toggle-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
         }
-        .toggle-button.selected:hover, .control-button.selected:hover {
+        .toggle-button.selected:hover {
             color: black; /* Black font on hover when selected */
+        }
+        .control-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-button {
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: white; /* Default white background */
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Karla', sans-serif; /* Karla font */
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .control-button:hover {
+            background-color: #f0f0f0; /* Lighter background on hover */
         }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
@@ -103,11 +125,15 @@
         }
         /* Responsive design for smaller screens */
         @media (max-width: 768px) {
-            .toggle-buttons, .control-buttons {
+            .toggle-buttons {
                 padding: 5px;
                 gap: 2px;
             }
-            .toggle-button, .control-button {
+            .toggle-button {
+                padding: 3px 5px;
+                font-size: 12px;
+            }
+            .control-button {
                 padding: 3px 5px;
                 font-size: 12px;
             }
