@@ -33,6 +33,7 @@
             font-family: 'Karla', sans-serif; /* Karla font */
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
         .toggle-button {
             padding: 5px 10px;
@@ -42,6 +43,8 @@
             border: none;
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
+            flex: 1 1 auto;
+            text-align: center;
         }
         .toggle-button.selected {
             background-color: black; /* Black background for selected */
@@ -93,6 +96,18 @@
         .leaflet-popup {
             z-index: 1100 !important;
         }
+        @media (max-width: 600px) {
+            .toggle-buttons {
+                flex-direction: column;
+                align-items: center;
+                padding: 5px;
+            }
+            .toggle-button {
+                flex: none;
+                margin: 5px 0;
+                width: 80%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -122,6 +137,16 @@
         ];
         
         map.fitBounds(bounds);
+
+        // Set max bounds to restrict map view to the island area
+        const maxBounds = L.latLngBounds(
+            [17.95, -63.25], // South-West coordinates
+            [18.25, -62.85]  // North-East coordinates
+        );
+        map.setMaxBounds(maxBounds);
+        map.on('drag', function() {
+            map.panInsideBounds(maxBounds, { animate: false });
+        });
 
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
