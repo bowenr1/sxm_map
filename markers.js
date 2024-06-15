@@ -16,22 +16,3 @@ var markers = [
         url: "https://example.com/article2"
     }
 ];
-
-markers.forEach(function(marker) {
-    var popupContent = `
-        <div class="popup-content">
-            <h3 class="popup-title">${marker.title}</h3>
-            <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
-            <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
-            <p><a href="${marker.url}" target="_blank" class="popup-link">Read more</a></p>
-        </div>
-    `;
-
-    var markerInstance = L.marker([marker.lat, marker.lng])
-                         .bindPopup(popupContent)
-                         .addTo(map);
-
-    markerInstance.on('click', function(e) {
-        this.openPopup();
-    });
-});
