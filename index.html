@@ -47,11 +47,11 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             font-size: 14px;
-            color: black; /* Change to black */
-            text-decoration: none; /* Remove underline */
+            color: black !important; /* Change to black */
+            text-decoration: none !important; /* Remove underline */
         }
         .popup-link:hover {
-            text-decoration: underline; /* Optionally add underline on hover */
+            text-decoration: underline !important; /* Optionally add underline on hover */
         }
         .popup-image {
             width: 100%;
@@ -89,7 +89,7 @@
                 <div class="popup-content">
                     <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
                     <h3 class="popup-title">${marker.title}</h3>
-                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 15).join(" ")}...</p>
+                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
                     <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
                     <p><a href="${marker.url}" target="_blank" class="popup-link">Read More</a></p>
                 </div>
