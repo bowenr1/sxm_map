@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
             margin: 0;
@@ -68,12 +68,20 @@
             cursor: pointer;
             z-index: 1000; /* Ensure it stays above the map */
             font-family: 'Karla', sans-serif; /* Karla font */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #reset-view-button {
-            right: 90px; /* Position it next to the Locate Me button */
+            right: 70px; /* Adjust position */
         }
         #locate-button:hover, #reset-view-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
+        }
+        .button-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
         }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
@@ -100,23 +108,14 @@
             font-size: 14px;
         }
         .popup-link {
-            font-family: 'Karla', sans-serif;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
             font-size: 14px;
             color: black !important; /* Change to black */
             text-decoration: none !important; /* Remove underline */
             font-weight: bold; /* Make the link bold */
         }
         .popup-link:hover {
-            text-decoration: underline !important; /* Optionally add underline on hover */
-        }
-        .popup-email {
-            font-family: 'Karla', sans-serif;
-            font-size: 14px;
-            color: blue !important; /* Change to blue */
-            text-decoration: none !important; /* Remove underline */
-            font-weight: bold; /* Make the link bold */
-        }
-        .popup-email:hover {
             text-decoration: underline !important; /* Optionally add underline on hover */
         }
         .popup-image {
@@ -143,6 +142,10 @@
                 font-size: 12px;
                 top: 50px;
             }
+            #reset-view-button {
+                right: 10px;
+                top: 80px;
+            }
         }
     </style>
 </head>
@@ -154,8 +157,12 @@
         <button class="toggle-button" onclick="toggleMarkers('pictures')">Photos</button>
         <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
     </div>
-    <button id="locate-button">Locate Me</button>
-    <button id="reset-view-button">Reset View</button>
+    <button id="locate-button">
+        <img src="https://cdn-icons-png.flaticon.com/512/61/61078.png" alt="Locate Me" class="button-icon" /> Locate Me
+    </button>
+    <button id="reset-view-button">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" alt="Reset View" class="button-icon" /> Reset View
+    </button>
     <script src="markers.js"></script>
     <script>
         const map = L.map('map', {
@@ -200,7 +207,6 @@
                         <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 20).join(" ")}...</p>
                         <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
-                        <p><a href="mailto:info@example.com?subject=More%20Info%20About%20${marker.title}" class="popup-email">Contact Us</a></p>
                     </div>
                 `;
                 var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent);
