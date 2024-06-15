@@ -110,7 +110,7 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
-        const mapboxAccessToken = 'pk.eyJ1IjoiYm93cGx1IiwiYSI6ImNseGdjeTl6azEybmIyaW9ueHBudHllejYifQ.PCgeIsjz_AAa3f-JSU9ZyQ';
+        const mapboxNavigationToken = 'sk.eyJ1IjoiYm93cGx1IiwiYSI6ImNseGdkeDl4NDA0ZnoyanBvejV4MjV2NDIifQ.bBY_YJH3KvoQ732muB9_Aw';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
         // Add MapTiler layer with your specific map
@@ -181,7 +181,7 @@
                 L.latLng(18.1325, -63.1400)  // Example end point
             ],
             routeWhileDragging: true,
-            router: new L.Routing.Mapbox(mapboxAccessToken)
+            router: new L.Routing.Mapbox(mapboxNavigationToken)
         }).addTo(map);
 
         // Add heat map layer
