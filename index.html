@@ -3,7 +3,7 @@
 <head>
     <title>Interactive Map of St. Maarten / St. Martin</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
@@ -30,18 +30,21 @@
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            font-family: 'Karla', sans-serif; /* Karla font */
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .toggle-button {
-            padding: 5px 10px;
+            padding: 10px 15px;
             cursor: pointer;
             background-color: grey; /* Default grey background */
             color: white;
             border: none;
             border-radius: 5px;
+            margin: 5px 0;
             font-family: 'Karla', sans-serif; /* Karla font */
+            font-size: 1rem;
         }
         .toggle-button.selected {
             background-color: black; /* Black background for selected */
@@ -92,6 +95,12 @@
         /* Ensure popups have a higher z-index */
         .leaflet-popup {
             z-index: 1100 !important;
+        }
+        @media (max-width: 768px) {
+            .toggle-button {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -164,54 +173,35 @@
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
-            // Remove all layers
             map.eachLayer(function (layer) {
                 if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
                     map.removeLayer(layer);
                 }
             });
 
-            // Add the selected layers
-            switch (type) {
-                case 'all':
-                    articleLayer.addTo(map);
-                    pictureLayer.addTo(map);
-                    soundLayer.addTo(map);
-                    videoLayer.addTo(map);
-                    wildlifeLayer.addTo(map);
-                    beachLayer.addTo(map);
-                    break;
-                case 'articles':
-                    articleLayer.addTo(map);
-                    break;
-                case 'pictures':
-                    pictureLayer.addTo(map);
-                    break;
-                case 'sounds':
-                    soundLayer.addTo(map);
-                    break;
-                case 'videos':
-                    videoLayer.addTo(map);
-                    break;
-                case 'wildlife':
-                    wildlifeLayer.addTo(map);
-                    break;
-                case 'beaches':
-                    beachLayer.addTo(map);
-                    break;
-                // Add cases for other marker types as needed
-            }
+            const layers = {
+                'all': [articleLayer, pictureLayer, soundLayer, videoLayer, wildlifeLayer, beachLayer],
+                'articles': [articleLayer],
+                'pictures': [pictureLayer],
+                'sounds': [soundLayer],
+                'videos': [videoLayer],
+                'wildlife': [wildlifeLayer],
+                'beaches': [beachLayer]
+            };
 
-            // Update button states
-            var buttons = document.querySelectorAll('.toggle-button');
-            buttons.forEach(function(button) {
-                button.classList.remove('selected');
-            });
-            document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
+            layers[type].forEach(layer => layer.addTo(map));
+
+            document.querySelectorAll('.toggle-button').forEach(button => button.classList.remove('selected'));
+            document.querySelector(`.toggle-button[onclick="toggleMarkers('${type}')"]`).classList.add('selected');
         }
 
         // Initially add all layers to the map and set the "All" button as selected
         toggleMarkers('all');
+
+        // Adjust map view when device orientation changes
+        window.addEventListener("orientationchange", function() {
+            map.invalidateSize();
+        });
     </script>
 </body>
 </html>
