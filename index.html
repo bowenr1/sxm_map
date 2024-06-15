@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
             margin: 0;
@@ -25,7 +25,7 @@
             width: 100vw;
             overflow: hidden; /* Ensure no scrollbars appear */
         }
-        .toggle-buttons {
+        .toggle-buttons, .control-buttons {
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -37,7 +37,7 @@
             gap: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button {
+        .toggle-button, .control-button {
             padding: 5px 10px;
             cursor: pointer;
             background-color: white; /* Default white background */
@@ -46,42 +46,15 @@
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
         }
-        .toggle-button.selected {
+        .toggle-button.selected, .control-button.selected {
             background-color: black; /* Black background for selected */
             color: white;
         }
-        .toggle-button:hover {
+        .toggle-button:hover, .control-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
         }
-        .toggle-button.selected:hover {
+        .toggle-button.selected:hover, .control-button.selected:hover {
             color: black; /* Black font on hover when selected */
-        }
-        #locate-button, #reset-view-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            cursor: pointer;
-            z-index: 1000; /* Ensure it stays above the map */
-            font-family: 'Karla', sans-serif; /* Karla font */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #reset-view-button {
-            right: 70px; /* Adjust position */
-        }
-        #locate-button:hover, #reset-view-button:hover {
-            background-color: #f0f0f0; /* Lighter background on hover */
-        }
-        .button-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
         }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
@@ -96,11 +69,12 @@
             font-family: 'Karla', sans-serif;
         }
         .popup-title {
-            font-family: 'Karla', sans-serif;
+            font-family: 'Barlow Condensed', sans-serif;
             font-weight: 700;
             margin: 0;
             font-size: 20px; /* Increased font size */
             text-transform: uppercase; /* Make title uppercase */
+            letter-spacing: -0.75px; /* Letter spacing */
         }
         .popup-excerpt, .popup-tags {
             font-family: 'Karla', sans-serif;
@@ -129,22 +103,13 @@
         }
         /* Responsive design for smaller screens */
         @media (max-width: 768px) {
-            .toggle-buttons {
+            .toggle-buttons, .control-buttons {
                 padding: 5px;
                 gap: 2px;
             }
-            .toggle-button {
+            .toggle-button, .control-button {
                 padding: 3px 5px;
                 font-size: 12px;
-            }
-            #locate-button, #reset-view-button {
-                padding: 5px;
-                font-size: 12px;
-                top: 50px;
-            }
-            #reset-view-button {
-                right: 10px;
-                top: 80px;
             }
         }
     </style>
@@ -157,12 +122,10 @@
         <button class="toggle-button" onclick="toggleMarkers('pictures')">Photos</button>
         <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
     </div>
-    <button id="locate-button">
-        <img src="https://cdn-icons-png.flaticon.com/512/61/61078.png" alt="Locate Me" class="button-icon" /> Locate Me
-    </button>
-    <button id="reset-view-button">
-        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" alt="Reset View" class="button-icon" /> Reset View
-    </button>
+    <div class="control-buttons">
+        <button id="locate-button" class="control-button">Locate Me</button>
+        <button id="reset-view-button" class="control-button">Reset View</button>
+    </div>
     <script src="markers.js"></script>
     <script>
         const map = L.map('map', {
