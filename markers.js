@@ -1,7 +1,7 @@
 var articleMarkers = [
     {
-        lat: 18.0425,
-        lng: -63.0548,
+        lat: 18.0658,
+        lng: -63.1396,
         title: "Article 1",
         excerpt: "This is an excerpt for Article 1.",
         tags: "tag1, tag2, tag3",
@@ -9,8 +9,8 @@ var articleMarkers = [
         imageUrl: "https://example.com/image1.jpg"
     },
     {
-        lat: 18.0500,
-        lng: -63.0600,
+        lat: 18.0238,
+        lng: -63.0459,
         title: "Article 2",
         excerpt: "This is an excerpt for Article 2.",
         tags: "tag4, tag5",
@@ -21,8 +21,8 @@ var articleMarkers = [
 
 var pictureMarkers = [
     {
-        lat: 18.0625,
-        lng: -63.0700,
+        lat: 18.0278,
+        lng: -63.0908,
         title: "Picture 1",
         excerpt: "This is a picture description.",
         tags: "photo, image",
@@ -30,8 +30,8 @@ var pictureMarkers = [
         imageUrl: "https://example.com/picture1.jpg"
     },
     {
-        lat: 18.0725,
-        lng: -63.0800,
+        lat: 18.0398,
+        lng: -63.1140,
         title: "Picture 2",
         excerpt: "This is another picture description.",
         tags: "photo, image",
@@ -42,8 +42,8 @@ var pictureMarkers = [
 
 var soundMarkers = [
     {
-        lat: 18.0825,
-        lng: -63.0900,
+        lat: 18.0511,
+        lng: -63.0944,
         title: "Sound 1",
         excerpt: "This is a sound description.",
         tags: "audio, music",
@@ -51,8 +51,8 @@ var soundMarkers = [
         imageUrl: "https://example.com/sound1.jpg"
     },
     {
-        lat: 18.0925,
-        lng: -63.1000,
+        lat: 18.10541,
+        lng: -63.02524,
         title: "Sound 2",
         excerpt: "This is another sound description.",
         tags: "audio, music",
@@ -63,8 +63,8 @@ var soundMarkers = [
 
 var videoMarkers = [
     {
-        lat: 18.1025,
-        lng: -63.1100,
+        lat: 18.0892,
+        lng: -63.0217,
         title: "Video 1",
         excerpt: "This is a video description.",
         tags: "video, clip",
@@ -72,8 +72,8 @@ var videoMarkers = [
         imageUrl: "https://example.com/video1.jpg"
     },
     {
-        lat: 18.1125,
-        lng: -63.1200,
+        lat: 18.1005310,
+        lng: -63.0575966,
         title: "Video 2",
         excerpt: "This is another video description.",
         tags: "video, clip",
