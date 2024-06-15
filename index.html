@@ -9,9 +9,6 @@
     <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
     <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -110,7 +107,6 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
-        const mapboxNavigationToken = 'sk.eyJ1IjoiYm93cGx1IiwiYSI6ImNseGdkeDl4NDA0ZnoyanBvejV4MjV2NDIifQ.bBY_YJH3KvoQ732muB9_Aw';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
         // Add MapTiler layer with your specific map
@@ -125,79 +121,6 @@
         ];
         
         map.fitBounds(bounds);
-
-        // Custom function to create a routing control using Mapbox Directions API
-        L.Routing.Mapbox = L.Class.extend({
-            options: {
-                serviceUrl: 'https://api.mapbox.com/directions/v5/mapbox/driving',
-                profile: 'mapbox/driving',
-                useHints: false
-            },
-            initialize: function (accessToken, options) {
-                L.Util.setOptions(this, options);
-                this._accessToken = accessToken;
-            },
-            route: function (waypoints, callback, context, options) {
-                var url = this.options.serviceUrl + '/' + waypoints.map(function (wp) {
-                    return wp.latLng.lng + ',' + wp.latLng.lat;
-                }).join(';') + '?access_token=' + this._accessToken + '&geometries=geojson';
-
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
-                xhr.onload = function () {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        var data = JSON.parse(xhr.responseText);
-                        var routes = data.routes.map(function (route) {
-                            return {
-                                name: '',
-                                coordinates: route.geometry.coordinates.map(function (c) {
-                                    return L.latLng(c[1], c[0]);
-                                }),
-                                instructions: []
-                            };
-                        });
-                        callback.call(context || callback, null, routes);
-                    } else {
-                        callback.call(context || callback, {
-                            status: xhr.status,
-                            message: xhr.responseText
-                        });
-                    }
-                };
-                xhr.onerror = function () {
-                    callback.call(context || callback, {
-                        status: xhr.status,
-                        message: xhr.responseText
-                    });
-                };
-                xhr.send();
-            }
-        });
-
-        // Add routing control with custom Mapbox routing class
-        L.Routing.control({
-            waypoints: [
-                L.latLng(18.0425, -63.0548), // Example start point
-                L.latLng(18.1325, -63.1400)  // Example end point
-            ],
-            routeWhileDragging: true,
-            router: new L.Routing.Mapbox(mapboxNavigationToken)
-        }).addTo(map);
-
-        // Add heat map layer
-        var heatData = [
-            [18.0425, -63.0548, 0.5], // Example data points
-            [18.1325, -63.1400, 0.8],
-            [18.0725, -63.0800, 0.6],
-            [18.1125, -63.1200, 0.9],
-            [18.1525, -63.1600, 0.7]
-        ];
-
-        var heat = L.heatLayer(heatData, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17,
-        }).addTo(map);
 
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
@@ -234,12 +157,11 @@
         // Function to toggle marker layers
         function toggleMarkers(type) {
             // Remove all layers
-            articleLayer.remove();
-            pictureLayer.remove();
-            soundLayer.remove();
-            videoLayer.remove();
-            wildlifeLayer.remove();
-            beachLayer.remove();
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker || layer instanceof L.LayerGroup) {
+                    map.removeLayer(layer);
+                }
+            });
 
             // Add the selected layers
             switch (type) {
