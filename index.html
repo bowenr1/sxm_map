@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
             margin: 0;
@@ -18,12 +19,33 @@
             width: 100vw;
             overflow: hidden; /* Ensure no scrollbars appear */
         }
+        .leaflet-popup-content {
+            font-family: 'Karla', sans-serif;
+        }
+        .popup-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            margin: 0;
+            font-size: 16px;
+        }
+        .popup-excerpt, .popup-tags {
+            font-family: 'Karla', sans-serif;
+            margin: 0;
+            font-size: 14px;
+        }
+        .popup-link {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 14px;
+            color: black;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="markers.js"></script> <!-- Ensure this points to your markers.js file -->
+    <script src="markers.js"></script>
     <script>
         // Initialize the map
         var map = L.map('map').setView([18.0425, -63.0548], 12);
@@ -39,15 +61,20 @@
             [18.01, -63.15],  // Southwest coordinates
             [18.13, -62.97]   // Northeast coordinates
         ];
-        
+
         // Fit the map to the defined bounds
         map.fitBounds(bounds);
 
         // Add markers with popups and links
         markers.forEach(function(marker) {
-            var popupContent = "<h3>" + marker.title + "</h3>" +
-                               "<p>" + marker.excerpt + "</p>" +
-                               "<p><a href='" + marker.url + "' target='_blank'>Read more</a></p>";
+            var popupContent = `
+                <div class="popup-content">
+                    <h3 class="popup-title">${marker.title}</h3>
+                    <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 5).join(" ")}...</p>
+                    <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
+                    <p><a href="${marker.url}" target="_blank" class="popup-link">Read more</a></p>
+                </div>
+            `;
 
             var markerInstance = L.marker([marker.lat, marker.lng])
                                  .bindPopup(popupContent)
