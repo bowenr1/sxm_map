@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@maptiler/leaflet-maptilersdk@1.1.0/dist/Leaflet.MaptilerSDK.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -107,7 +108,7 @@
         var map = L.map('map').setView([18.0425, -63.0548], 12);
 
         // Create a MapTiler Layer inside Leaflet
-        var mtLayer = L.maptilerLayer({
+        var mtLayer = new L.MaptilerLayer({
             apiKey: 'MlSSOtnP7BKLPGqmyOBa',
             style: 'https://api.maptiler.com/maps/c7ddf263-2f1f-4e5c-8713-4642a84b774c/style.json?key=MlSSOtnP7BKLPGqmyOBa'
         }).addTo(map);
