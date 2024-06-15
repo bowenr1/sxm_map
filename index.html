@@ -36,14 +36,13 @@
             justify-content: center;
         }
         .toggle-button {
-            padding: 10px 15px;
+            padding: 5px 10px;
             cursor: pointer;
             background-color: grey; /* Default grey background */
             color: white;
             border: none;
             border-radius: 5px;
             font-family: 'Karla', sans-serif; /* Karla font */
-            font-size: 1rem;
         }
         .toggle-button.selected {
             background-color: black; /* Black background for selected */
@@ -99,14 +98,13 @@
             .toggle-buttons {
                 flex-direction: row;
                 flex-wrap: wrap;
-                justify-content: space-around;
+                justify-content: center;
             }
             .toggle-button {
                 flex: 1 1 30%;
                 margin: 5px;
-                padding: 8px 12px;
+                padding: 5px 5px;
                 font-size: 0.9rem;
-                text-align: center;
             }
         }
     </style>
@@ -122,7 +120,7 @@
         <button class="toggle-button" onclick="toggleMarkers('wildlife')">Wildlife</button>
         <button class="toggle-button" onclick="toggleMarkers('beaches')">Beaches</button>
     </div>
-    <script src="markers.js"></script>
+    <script src="https://example.com/path/to/markers.js"></script>
     <script>
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
