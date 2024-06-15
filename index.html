@@ -5,8 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/mapbox-gl@2.4.1/dist/mapbox-gl.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-mapbox-gl@0.1.0/Leaflet.MapboxGL.css" />
+    <link rel="stylesheet" href="https://api.maptiler.com/maps/streets/style.css?key=MlSSOtnP7BKLPGqmyOBa" />
+    <link rel="stylesheet" href="https://unpkg.com/mapbox-gl/dist/mapbox-gl.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-mapbox-gl@0.11.0/Leaflet.MapboxGL.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -103,14 +104,15 @@
         <button class="toggle-button" onclick="toggleMarkers('beaches')">Beaches</button>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/mapbox-gl@2.4.1/dist/mapbox-gl.js"></script>
-    <script src="https://unpkg.com/leaflet-mapbox-gl@0.1.0/Leaflet.MapboxGL.js"></script>
+    <script src="https://unpkg.com/mapbox-gl/dist/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/leaflet-mapbox-gl@0.11.0/Leaflet.MapboxGL.js"></script>
     <script src="markers.js"></script>
     <script>
         var map = L.map('map').setView([18.0425, -63.0548], 12);
 
         // Use the MapTiler layer
         L.mapboxGL({
+            accessToken: 'MlSSOtnP7BKLPGqmyOBa',
             style: 'https://api.maptiler.com/maps/c7ddf263-2f1f-4e5c-8713-4642a84b774c/style.json?key=MlSSOtnP7BKLPGqmyOBa'
         }).addTo(map);
 
