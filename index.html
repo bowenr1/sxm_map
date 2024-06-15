@@ -49,15 +49,13 @@
                                "<p>" + marker.excerpt + "</p>" +
                                "<p><a href='" + marker.url + "' target='_blank'>Read more</a></p>";
 
-            L.marker([marker.lat, marker.lng])
-             .bindPopup(popupContent)
-             .addTo(map)
-             .on('mouseover', function(e) {
-                 this.openPopup();
-             })
-             .on('mouseout', function(e) {
-                 this.closePopup();
-             });
+            var markerInstance = L.marker([marker.lat, marker.lng])
+                                 .bindPopup(popupContent)
+                                 .addTo(map);
+
+            markerInstance.on('click', function(e) {
+                this.openPopup();
+            });
         });
     </script>
 </body>
