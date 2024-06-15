@@ -44,5 +44,19 @@
         map.fitBounds(bounds);
 
         // Add markers with popups and links
-        if (typeof markers !== 'undefined') {
-            markers.forEach(function
+        markers.forEach(function(marker) {
+            var popupContent = "<h3>" + marker.title + "</h3>" +
+                               "<p>" + marker.excerpt + "</p>" +
+                               "<p><a href='" + marker.url + "' target='_blank'>Read more</a></p>";
+
+            var markerInstance = L.marker([marker.lat, marker.lng])
+                                 .bindPopup(popupContent)
+                                 .addTo(map);
+
+            markerInstance.on('click', function(e) {
+                this.openPopup();
+            });
+        });
+    </script>
+</body>
+</html>
