@@ -57,14 +57,18 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: white;
-            padding: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: white; /* Default white background */
+            color: black;
             border: none;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            cursor: pointer;
-            z-index: 1000; /* Ensure it stays above the map */
             font-family: 'Karla', sans-serif; /* Karla font */
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 1000; /* Ensure it stays above the map */
+        }
+        #locate-button:hover {
+            background-color: #f0f0f0; /* Lighter background on hover */
         }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
