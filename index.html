@@ -109,10 +109,10 @@
         const key = 'MlSSOtnP7BKLPGqmyOBa';
         const map = L.map('map').setView([18.0425, -63.0548], 12);
         
-        // Add MapTiler layer
+        // Add MapTiler layer with your specific map
         const mtLayer = L.maptilerLayer({
             apiKey: key,
-            style: "streets" // Optional: you can change the style
+            style: 'c7ddf263-2f1f-4e5c-8713-4642a84b774c' // Your specific map style ID
         }).addTo(map);
 
         const bounds = [
