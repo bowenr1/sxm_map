@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Custom Interactive Map</title>
+    <title>Interactive Map of St. Maarten / St. Martin</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
             margin: 0;
@@ -16,29 +17,70 @@
         #map {
             height: 100vh;
             width: 100vw;
+            overflow: hidden; /* Ensure no scrollbars appear */
         }
-        .popup-content {
+        .toggle-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white; /* White background */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-family: 'Karla', sans-serif; /* Karla font */
+        }
+        .toggle-button {
+            display: block;
+            margin: 5px 0;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: grey; /* Default grey background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Karla', sans-serif; /* Karla font */
+        }
+        .toggle-button.selected {
+            background-color: black; /* Black background for selected */
+        }
+        .toggle-button:hover {
+            background-color: #333; /* Darker background on hover */
+        }
+        /* Customize Leaflet popups */
+        .leaflet-popup-content-wrapper {
+            background-color: #f9f9f9; /* Background color */
+            color: #333; /* Text color */
+            border-radius: 10px; /* Rounded corners */
+            border: 2px solid #333; /* Border color and width */
+            width: 250px; /* Fixed width */
+            max-width: 300px; /* Maximum width */
+        }
+        .leaflet-popup-content {
             font-family: 'Karla', sans-serif;
         }
         .popup-title {
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 700;
-            font-size: 20px;
-            text-transform: uppercase;
+            margin: 0;
+            font-size: 20px; /* Increased font size */
+            text-transform: uppercase; /* Make title uppercase */
         }
         .popup-excerpt, .popup-tags {
+            font-family: 'Karla', sans-serif;
+            margin: 0;
             font-size: 14px;
         }
         .popup-link {
             font-family: 'Playfair Display', serif;
             font-style: italic;
             font-size: 14px;
-            color: black !important;
-            text-decoration: none !important;
-            font-weight: bold;
+            color: black !important; /* Change to black */
+            text-decoration: none !important; /* Remove underline */
+            font-weight: bold; /* Make the link bold */
         }
         .popup-link:hover {
-            text-decoration: underline !important;
+            text-decoration: underline !important; /* Optionally add underline on hover */
         }
         .popup-image {
             width: 100%;
@@ -49,27 +91,40 @@
 </head>
 <body>
     <div id="map"></div>
+    <div class="toggle-buttons">
+        <button class="toggle-button" onclick="toggleMarkers('all')">All</button>
+        <button class="toggle-button" onclick="toggleMarkers('articles')">Articles</button>
+        <button class="toggle-button" onclick="toggleMarkers('pictures')">Pictures</button>
+        <button class="toggle-button" onclick="toggleMarkers('sounds')">Sounds</button>
+        <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
+        <button class="toggle-button" onclick="toggleMarkers('wildlife')">Wildlife</button>
+        <button class="toggle-button" onclick="toggleMarkers('beaches')">Beaches</button>
+    </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="markers.js"></script>
     <script>
         var map = L.map('map').setView([18.0425, -63.0548], 12);
 
-        // Use a custom tile layer (e.g., CartoDB Positron)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        // Use the OpenStreetMap layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
         }).addTo(map);
 
-        // Custom marker icon
-        var customIcon = L.icon({
-            iconUrl: 'path/to/custom-icon.png',
-            iconSize: [38, 38],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76],
-            shadowUrl: 'path/to/marker-shadow.png',
-            shadowSize: [68, 95],
-            shadowAnchor: [22, 94]
-        });
+        var bounds = [
+            [18.01, -63.15],
+            [18.13, -62.97]
+        ];
+        
+        map.fitBounds(bounds);
+
+        // Create layer groups for each marker type
+        var articleLayer = L.layerGroup();
+        var pictureLayer = L.layerGroup();
+        var soundLayer = L.layerGroup();
+        var videoLayer = L.layerGroup();
+        var wildlifeLayer = L.layerGroup();
+        var beachLayer = L.layerGroup();
 
         // Function to create markers and add them to the respective layer
         function createMarkers(markerData, layer) {
@@ -83,17 +138,9 @@
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
                     </div>
                 `;
-                L.marker([marker.lat, marker.lng], {icon: customIcon}).bindPopup(popupContent).addTo(layer);
+                L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
             });
         }
-
-        // Create layer groups for each marker type
-        var articleLayer = L.layerGroup();
-        var pictureLayer = L.layerGroup();
-        var soundLayer = L.layerGroup();
-        var videoLayer = L.layerGroup();
-        var wildlifeLayer = L.layerGroup();
-        var beachLayer = L.layerGroup();
 
         // Create markers for each layer
         createMarkers(articleMarkers, articleLayer);
