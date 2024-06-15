@@ -3,8 +3,12 @@
 <head>
     <title>Interactive Map of St. Maarten / St. Martin</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -100,23 +104,18 @@
         <button class="toggle-button" onclick="toggleMarkers('wildlife')">Wildlife</button>
         <button class="toggle-button" onclick="toggleMarkers('beaches')">Beaches</button>
     </div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/@maptiler/leaflet-maptilersdk"></script>
     <script src="markers.js"></script>
     <script>
-        // Initialize the map
-        var map = L.map('map', {
-            center: [18.0425, -63.0548],
-            zoom: 12
-        });
-
+        const key = 'MlSSOtnP7BKLPGqmyOBa';
+        const map = L.map('map').setView([18.0425, -63.0548], 12);
+        
         // Add MapTiler layer
-        var mtLayer = new L.maptilerLayer({
-            apiKey: "MlSSOtnP7BKLPGqmyOBa",
-            style: "streets" // Change style as needed
+        const mtLayer = L.maptilerLayer({
+            apiKey: key,
+            style: "streets" // Optional: you can change the style
         }).addTo(map);
 
-        var bounds = [
+        const bounds = [
             [18.01, -63.15],
             [18.13, -62.97]
         ];
