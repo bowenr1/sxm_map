@@ -6,6 +6,9 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -104,20 +107,19 @@
     <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
+        const map = L.map('map').setView([18.0425, -63.0548], 12);
+        
+        // Add MapTiler layer with your specific map
+        const mtLayer = L.maptilerLayer({
+            apiKey: key,
+            style: 'c7ddf263-2f1f-4e5c-8713-4642a84b774c' // Your specific map style ID
+        }).addTo(map);
+
         const bounds = [
             [18.01, -63.15],
             [18.13, -62.97]
         ];
-        const map = L.map('map', {
-            maxBounds: bounds,
-            maxBoundsViscosity: 1.0 // This option ensures the map view is "sticky" within bounds
-        }).setView([18.0425, -63.0548], 12);
-
-        // Add MapTiler layer with your specific map style
-        const mtLayer = L.tileLayer(`https://api.maptiler.com/maps/c7ddf263-2f1f-4e5c-8713-4642a84b774c/256/{z}/{x}/{y}.png?key=${key}`, {
-            attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> contributors'
-        }).addTo(map);
-
+        
         map.fitBounds(bounds);
 
         // Create layer groups for each marker type
