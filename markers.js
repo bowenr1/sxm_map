@@ -4,8 +4,8 @@ var markers = [
         lng: -63.0548,
         title: "Article 1",
         excerpt: "This is an excerpt for Article 1.",
-        url: "https://example.com/article1",
-        tags: ["tag1", "tag2"]
+        url: "https://pulsemagazine.sx/stories",
+        tags: "tag1", "tag2"
     },
     {
         lat: 18.0500,
