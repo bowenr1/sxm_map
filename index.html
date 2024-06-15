@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Interactive Map of St. Maarten / St. Martin</title>
+    <title>Custom Interactive Map</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -105,10 +105,10 @@
     <script>
         var map = L.map('map').setView([18.0425, -63.0548], 12);
 
-        // Use the OpenStreetMap layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19
+        // Use MapTiler Terrain tiles
+        L.tileLayer('https://api.maptiler.com/tiles/terrain/{z}/{x}/{y}.png?key=MlSSOtnP7BKLPGqmyOBa', {
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 20
         }).addTo(map);
 
         var bounds = [
