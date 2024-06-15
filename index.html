@@ -178,6 +178,9 @@
                     }
                 }
             });
+
+            // Initially show all layers and set the "All" button as selected
+            toggleMarkers('all');
         });
 
         // Functions to toggle markers (assuming they are already created and stored in layer groups)
@@ -208,9 +211,6 @@
             });
             document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
         }
-
-        // Initially show all layers and set the "All" button as selected
-        toggleMarkers('all');
     </script>
 </body>
 </html>
