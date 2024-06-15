@@ -26,13 +26,11 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: white; /* White background */
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            font-family: 'Karla', sans-serif; /* Karla font */
             display: flex;
             gap: 5px;
+            font-family: 'Karla', sans-serif; /* Karla font */
         }
         .toggle-button {
             padding: 5px 10px;
@@ -109,9 +107,9 @@
 <body>
     <div id="map"></div>
     <div class="toggle-buttons">
+        <button class="toggle-button selected" onclick="toggleMarkers('all')">All</button>
         <button class="toggle-button" onclick="toggleMarkers('articles')">Articles</button>
-        <button class="toggle-button" onclick="toggleMarkers('pictures')">Pictures</button>
-        <button class="toggle-button" onclick="toggleMarkers('sounds')">Sounds</button>
+        <button class="toggle-button" onclick="toggleMarkers('pictures')">Photos</button>
         <button class="toggle-button" onclick="toggleMarkers('videos')">Videos</button>
     </div>
     <script src="markers.js"></script>
@@ -134,14 +132,12 @@
         const icons = {
             articles: L.icon({ iconUrl: 'article-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
             pictures: L.icon({ iconUrl: 'picture-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
-            sounds: L.icon({ iconUrl: 'sound-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
             videos: L.icon({ iconUrl: 'video-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] })
         };
 
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
         var pictureLayer = L.layerGroup();
-        var soundLayer = L.layerGroup();
         var videoLayer = L.layerGroup();
 
         // Function to create markers and add them to the respective layer
@@ -170,7 +166,6 @@
         // Create markers for each layer
         createMarkers(articleMarkers, articleLayer, icons.articles);
         createMarkers(pictureMarkers, pictureLayer, icons.pictures);
-        createMarkers(soundMarkers, soundLayer, icons.sounds);
         createMarkers(videoMarkers, videoLayer, icons.videos);
 
         // Function to toggle marker layers
@@ -184,14 +179,16 @@
 
             // Add the selected layers
             switch (type) {
+                case 'all':
+                    articleLayer.addTo(map);
+                    pictureLayer.addTo(map);
+                    videoLayer.addTo(map);
+                    break;
                 case 'articles':
                     articleLayer.addTo(map);
                     break;
                 case 'pictures':
                     pictureLayer.addTo(map);
-                    break;
-                case 'sounds':
-                    soundLayer.addTo(map);
                     break;
                 case 'videos':
                     videoLayer.addTo(map);
@@ -207,8 +204,8 @@
             document.querySelector('.toggle-button[onclick="toggleMarkers(\'' + type + '\')"]').classList.add('selected');
         }
 
-        // Initially add article layer to the map and set the "Articles" button as selected
-        toggleMarkers('articles');
+        // Initially add all layers to the map and set the "All" button as selected
+        toggleMarkers('all');
     </script>
 </body>
 </html>
