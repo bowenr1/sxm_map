@@ -12,7 +12,6 @@
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine-mapbox/0.3.0/leaflet-routing-machine-mapbox.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -127,7 +126,55 @@
         
         map.fitBounds(bounds);
 
-        // Add routing control with Mapbox
+        // Custom function to create a routing control using Mapbox Directions API
+        L.Routing.Mapbox = L.Class.extend({
+            options: {
+                serviceUrl: 'https://api.mapbox.com/directions/v5/mapbox/driving',
+                profile: 'mapbox/driving',
+                useHints: false
+            },
+            initialize: function (accessToken, options) {
+                L.Util.setOptions(this, options);
+                this._accessToken = accessToken;
+            },
+            route: function (waypoints, callback, context, options) {
+                var url = this.options.serviceUrl + '/' + this.options.profile + '/' + waypoints.map(function (wp) {
+                    return wp.latLng.lng + ',' + wp.latLng.lat;
+                }).join(';') + '?access_token=' + this._accessToken;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.onload = function () {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        var data = JSON.parse(xhr.responseText);
+                        var routes = data.routes.map(function (route) {
+                            return {
+                                name: '',
+                                coordinates: route.geometry.coordinates.map(function (c) {
+                                    return L.latLng(c[1], c[0]);
+                                }),
+                                instructions: []
+                            };
+                        });
+                        callback.call(context || callback, null, routes);
+                    } else {
+                        callback.call(context || callback, {
+                            status: xhr.status,
+                            message: xhr.responseText
+                        });
+                    }
+                };
+                xhr.onerror = function () {
+                    callback.call(context || callback, {
+                        status: xhr.status,
+                        message: xhr.responseText
+                    });
+                };
+                xhr.send();
+            }
+        });
+
+        // Add routing control with custom Mapbox routing class
         L.Routing.control({
             waypoints: [
                 L.latLng(18.0425, -63.0548), // Example start point
