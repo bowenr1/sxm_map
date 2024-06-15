@@ -120,6 +120,14 @@
         
         map.fitBounds(bounds);
 
+        // Custom icons for each marker category
+        const icons = {
+            articles: L.icon({ iconUrl: 'article-icon.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            pictures: L.icon({ iconUrl: 'picture-icon.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            sounds: L.icon({ iconUrl: 'sound-icon.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            videos: L.icon({ iconUrl: 'video-icon.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] })
+        };
+
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
         var pictureLayer = L.layerGroup();
@@ -127,7 +135,7 @@
         var videoLayer = L.layerGroup();
 
         // Function to create markers and add them to the respective layer
-        function createMarkers(markerData, layer) {
+        function createMarkers(markerData, layer, icon) {
             markerData.forEach(function(marker) {
                 var popupContent = `
                     <div class="popup-content">
@@ -139,7 +147,7 @@
                     </div>
                 `;
                 
-                var markerInstance = L.marker([marker.lat, marker.lng]).bindPopup(popupContent).addTo(layer);
+                var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent).addTo(layer);
 
                 markerInstance.on('popupopen', function(e) {
                     var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
@@ -150,10 +158,10 @@
         }
 
         // Create markers for each layer
-        createMarkers(articleMarkers, articleLayer);
-        createMarkers(pictureMarkers, pictureLayer);
-        createMarkers(soundMarkers, soundLayer);
-        createMarkers(videoMarkers, videoLayer);
+        createMarkers(articleMarkers, articleLayer, icons.articles);
+        createMarkers(pictureMarkers, pictureLayer, icons.pictures);
+        createMarkers(soundMarkers, soundLayer, icons.sounds);
+        createMarkers(videoMarkers, videoLayer, icons.videos);
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
