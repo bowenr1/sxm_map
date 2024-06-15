@@ -138,6 +138,16 @@
         
         map.fitBounds(bounds);
 
+        // Set max bounds to restrict map view to the island area
+        const maxBounds = L.latLngBounds(
+            [17.95, -63.25], // South-West coordinates
+            [18.25, -62.85]  // North-East coordinates
+        );
+        map.setMaxBounds(maxBounds);
+        map.on('drag', function() {
+            map.panInsideBounds(maxBounds, { animate: false });
+        });
+
         // Create layer groups for each marker type
         var articleLayer = L.layerGroup();
         var pictureLayer = L.layerGroup();
