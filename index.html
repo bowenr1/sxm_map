@@ -78,19 +78,6 @@
         .control-button:hover {
             background-color: #f0f0f0; /* Lighter background on hover */
         }
-        .mouse-coordinates {
-            position: absolute;
-            bottom: 50px;
-            right: 10px;
-            background: white;
-            padding: 5px 10px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            font-family: 'Karla', sans-serif;
-            font-size: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
         /* Customize Leaflet popups */
         .leaflet-popup-content-wrapper {
             background-color: #f9f9f9; /* Background color */
@@ -150,10 +137,6 @@
                 padding: 3px 5px;
                 font-size: 12px;
             }
-            .mouse-coordinates {
-                font-size: 10px;
-                padding: 3px 5px;
-            }
         }
     </style>
 </head>
@@ -168,9 +151,7 @@
     <div class="control-buttons">
         <button id="locate-button" class="control-button">Locate Me</button>
         <button id="reset-view-button" class="control-button">Reset View</button>
-        <button onclick="toggleMeasure()" class="control-button">Toggle Measure</button>
     </div>
-    <div id="mouse-coordinates" class="mouse-coordinates"></div>
     <script src="markers.js"></script>
     <script>
         const map = L.map('map', {
@@ -286,39 +267,6 @@
         document.getElementById('reset-view-button').onclick = function() {
             map.setView([18.075, -63.05], 13);
         };
-
-        // Mouse coordinates display
-        const mouseCoordinates = document.getElementById('mouse-coordinates');
-
-        map.on('mousemove', function(e) {
-            const lat = e.latlng.lat.toFixed(5);
-            const lng = e.latlng.lng.toFixed(5);
-            mouseCoordinates.innerHTML = `Lat: ${lat}, Lng: ${lng}`;
-        });
-
-        // Measurement tool functionality
-        let measureStart = null;
-        let measureLine = null;
-
-        map.on('click', function(e) {
-            if (!measureStart) {
-                measureStart = e.latlng;
-                L.marker(measureStart).addTo(map);
-            } else {
-                const measureEnd = e.latlng;
-                const distance = measureStart.distanceTo(measureEnd);
-                if (measureLine) map.removeLayer(measureLine);
-                measureLine = L.polyline([measureStart, measureEnd], { color: 'blue' }).addTo(map);
-                alert(`Distance: ${(distance / 1000).toFixed(2)} km`);
-                measureStart = null;
-            }
-        });
-
-        function toggleMeasure() {
-            measureStart = null;
-            if (measureLine) map.removeLayer(measureLine);
-            measureLine = null;
-        }
     </script>
 </body>
 </html>
