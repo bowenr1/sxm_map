@@ -159,13 +159,13 @@
                 [17.95, -63.25], // Southwest corner
                 [18.15, -62.85]  // Northeast corner
             ],
-            maxBoundsViscosity: 1.0
+            maxBoundsViscosity: 1.0,
+            attributionControl: false // Disable the attribution control
         }).setView([18.075, -63.05], 13); // Centered on St. Martin
 
         // Add a basic map layer (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            maxZoom: 19
         }).addTo(map);
 
         // Add fullscreen control to the map
