@@ -97,17 +97,16 @@
         }
         @media (max-width: 768px) {
             .toggle-buttons {
-                flex-direction: column;
-                align-items: center;
-                width: 90%;
-                left: 50%;
-                transform: translateX(-50%);
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
             }
             .toggle-button {
-                width: 100%;
-                margin: 5px 0;
+                flex: 1 1 30%;
+                margin: 5px;
                 padding: 8px 12px;
                 font-size: 0.9rem;
+                text-align: center;
             }
         }
     </style>
