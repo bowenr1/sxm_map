@@ -158,7 +158,9 @@
     </div>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
-        const map = L.map('map').setView([18.075, -63.05], 13); // Centered on St. Martin
+        const map = L.map('map', {
+            maxZoom: 19, // Set maxZoom here
+        }).setView([18.075, -63.05], 13); // Centered on St. Martin
         
         // Add MapTiler layer
         const mtLayer = L.maptilerLayer({
@@ -171,9 +173,9 @@
 
         // Sample markers
         const markersData = [
-            { lat: 18.074, lng: -63.061, title: 'Marker 1', excerpt: 'This is marker 1.', imageUrl: 'path/to/image1.jpg', url: 'https://example.com', tags: 'tag1, tag2' },
-            { lat: 18.077, lng: -63.054, title: 'Marker 2', excerpt: 'This is marker 2.', imageUrl: 'path/to/image2.jpg', url: 'https://example.com', tags: 'tag1, tag2' },
-            { lat: 18.070, lng: -63.050, title: 'Marker 3', excerpt: 'This is marker 3.', imageUrl: 'path/to/image3.jpg', url: 'https://example.com', tags: 'tag1, tag2' }
+            { lat: 18.074, lng: -63.061, title: 'Marker 1', excerpt: 'This is marker 1.', imageUrl: 'path/to/image1.jpg', url: 'https://example.com', tags: 'articles' },
+            { lat: 18.077, lng: -63.054, title: 'Marker 2', excerpt: 'This is marker 2.', imageUrl: 'path/to/image2.jpg', url: 'https://example.com', tags: 'pictures' },
+            { lat: 18.070, lng: -63.050, title: 'Marker 3', excerpt: 'This is marker 3.', imageUrl: 'path/to/image3.jpg', url: 'https://example.com', tags: 'videos' }
         ];
 
         // Marker cluster group
