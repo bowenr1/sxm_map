@@ -13,6 +13,8 @@
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
     <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.5/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.5/Control.FullScreen.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -154,7 +156,6 @@
         <button id="locate-button" class="control-button">Locate Me</button>
         <button id="reset-view-button" class="control-button">Reset View</button>
     </div>
-    <script src="markers.js"></script>
     <script>
         const key = 'MlSSOtnP7BKLPGqmyOBa';
         const map = L.map('map').setView([18.075, -63.05], 13); // Centered on St. Martin
@@ -168,42 +169,35 @@
         // Add fullscreen control to the map
         L.control.fullscreen().addTo(map);
 
-        // Custom icons for each marker category with increased size
-        const icons = {
-            articles: L.icon({ iconUrl: 'article-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
-            pictures: L.icon({ iconUrl: 'picture-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
-            videos: L.icon({ iconUrl: 'video-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] })
-        };
-
-        // Create layer groups for each marker type
-        const articleLayer = L.layerGroup();
-        const pictureLayer = L.layerGroup();
-        const videoLayer = L.layerGroup();
+        // Sample markers
+        const markersData = [
+            { lat: 18.074, lng: -63.061, title: 'Marker 1', excerpt: 'This is marker 1.', imageUrl: 'path/to/image1.jpg', url: 'https://example.com', tags: 'tag1, tag2' },
+            { lat: 18.077, lng: -63.054, title: 'Marker 2', excerpt: 'This is marker 2.', imageUrl: 'path/to/image2.jpg', url: 'https://example.com', tags: 'tag1, tag2' },
+            { lat: 18.070, lng: -63.050, title: 'Marker 3', excerpt: 'This is marker 3.', imageUrl: 'path/to/image3.jpg', url: 'https://example.com', tags: 'tag1, tag2' }
+        ];
 
         // Marker cluster group
         const markers = L.markerClusterGroup();
 
         // Function to create markers and add them to the marker cluster group
-        function createMarkers(markerData, icon) {
+        function createMarkers(markerData) {
             markerData.forEach(function(marker) {
                 var popupContent = `
                     <div class="popup-content">
                         <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
                         <h3 class="popup-title">${marker.title}</h3>
-                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 20).join(" ")}...</p>
-                        <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
+                        <p class="popup-excerpt">${marker.excerpt}</p>
+                        <p class="popup-tags">${marker.tags}</p>
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
                     </div>
                 `;
-                var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent);
+                var markerInstance = L.marker([marker.lat, marker.lng]).bindPopup(popupContent);
                 markers.addLayer(markerInstance);
             });
         }
 
-        // Create markers for each layer
-        createMarkers(articleMarkers, icons.articles);
-        createMarkers(pictureMarkers, icons.pictures);
-        createMarkers(videoMarkers, icons.videos);
+        // Create markers and add to map
+        createMarkers(markersData);
 
         // Add the marker cluster group to the map
         map.addLayer(markers);
@@ -216,18 +210,13 @@
             // Add the selected markers
             switch (type) {
                 case 'all':
-                    createMarkers(articleMarkers, icons.articles);
-                    createMarkers(pictureMarkers, icons.pictures);
-                    createMarkers(videoMarkers, icons.videos);
+                    createMarkers(markersData);
                     break;
                 case 'articles':
-                    createMarkers(articleMarkers, icons.articles);
-                    break;
                 case 'pictures':
-                    createMarkers(pictureMarkers, icons.pictures);
-                    break;
                 case 'videos':
-                    createMarkers(videoMarkers, icons.videos);
+                    // Example: filter markers based on type if needed
+                    createMarkers(markersData.filter(m => m.tags.includes(type)));
                     break;
                 // Add cases for other marker types as needed
             }
