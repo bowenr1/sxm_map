@@ -9,12 +9,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
-    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
-    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+    <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.5/Control.FullScreen.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.5/Control.FullScreen.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Karla:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
     <style>
         html, body {
@@ -156,69 +152,85 @@
         <button id="locate-button" class="control-button">Locate Me</button>
         <button id="reset-view-button" class="control-button">Reset View</button>
     </div>
+    <script src="markers.js"></script>
     <script>
-        const key = 'MlSSOtnP7BKLPGqmyOBa';
         const map = L.map('map', {
-            maxZoom: 19, // Set maxZoom here
+            maxBounds: [
+                [17.95, -63.25], // Southwest corner
+                [18.15, -62.85]  // Northeast corner
+            ],
+            maxBoundsViscosity: 1.0
         }).setView([18.075, -63.05], 13); // Centered on St. Martin
-        
-        // Add MapTiler layer
-        const mtLayer = L.maptilerLayer({
-            apiKey: key,
-            style: "c7ddf263-2f1f-4e5c-8713-4642a84b774c", // optional
+
+        // Add a basic map layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         // Add fullscreen control to the map
         L.control.fullscreen().addTo(map);
 
-        // Sample markers
-        const markersData = [
-            { lat: 18.074, lng: -63.061, title: 'Marker 1', excerpt: 'This is marker 1.', imageUrl: 'path/to/image1.jpg', url: 'https://example.com', tags: 'articles' },
-            { lat: 18.077, lng: -63.054, title: 'Marker 2', excerpt: 'This is marker 2.', imageUrl: 'path/to/image2.jpg', url: 'https://example.com', tags: 'pictures' },
-            { lat: 18.070, lng: -63.050, title: 'Marker 3', excerpt: 'This is marker 3.', imageUrl: 'path/to/image3.jpg', url: 'https://example.com', tags: 'videos' }
-        ];
+        // Custom icons for each marker category with increased size
+        const icons = {
+            articles: L.icon({ iconUrl: 'article-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
+            pictures: L.icon({ iconUrl: 'picture-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] }),
+            videos: L.icon({ iconUrl: 'video-icon.png', iconSize: [37.5, 61.5], iconAnchor: [18.75, 61.5], popupAnchor: [1, -51], shadowSize: [61.5, 61.5] })
+        };
+
+        // Create layer groups for each marker type
+        var articleLayer = L.layerGroup();
+        var pictureLayer = L.layerGroup();
+        var videoLayer = L.layerGroup();
 
         // Marker cluster group
-        const markers = L.markerClusterGroup();
+        var markers = L.markerClusterGroup();
 
         // Function to create markers and add them to the marker cluster group
-        function createMarkers(markerData) {
+        function createMarkers(markerData, icon) {
             markerData.forEach(function(marker) {
                 var popupContent = `
                     <div class="popup-content">
                         <img src="${marker.imageUrl}" alt="${marker.title}" class="popup-image"/>
                         <h3 class="popup-title">${marker.title}</h3>
-                        <p class="popup-excerpt">${marker.excerpt}</p>
-                        <p class="popup-tags">${marker.tags}</p>
+                        <p class="popup-excerpt">${marker.excerpt.split(" ").slice(0, 20).join(" ")}...</p>
+                        <p class="popup-tags">${marker.tags.split(", ").slice(0, 5).join(", ")}</p>
                         <p><a href="${marker.url}" target="_blank" class="popup-link">Read More &rarr;</a></p>
                     </div>
                 `;
-                var markerInstance = L.marker([marker.lat, marker.lng]).bindPopup(popupContent);
+                var markerInstance = L.marker([marker.lat, marker.lng], { icon: icon }).bindPopup(popupContent);
                 markers.addLayer(markerInstance);
             });
         }
 
-        // Create markers and add to map
-        createMarkers(markersData);
+        // Create markers for each layer
+        createMarkers(articleMarkers, icons.articles);
+        createMarkers(pictureMarkers, icons.pictures);
+        createMarkers(videoMarkers, icons.videos);
 
         // Add the marker cluster group to the map
         map.addLayer(markers);
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
-            // Clear all markers
+            // Remove all layers
             markers.clearLayers();
 
-            // Add the selected markers
+            // Add the selected layers
             switch (type) {
                 case 'all':
-                    createMarkers(markersData);
+                    createMarkers(articleMarkers, icons.articles);
+                    createMarkers(pictureMarkers, icons.pictures);
+                    createMarkers(videoMarkers, icons.videos);
                     break;
                 case 'articles':
+                    createMarkers(articleMarkers, icons.articles);
+                    break;
                 case 'pictures':
+                    createMarkers(pictureMarkers, icons.pictures);
+                    break;
                 case 'videos':
-                    // Example: filter markers based on type if needed
-                    createMarkers(markersData.filter(m => m.tags.includes(type)));
+                    createMarkers(videoMarkers, icons.videos);
                     break;
                 // Add cases for other marker types as needed
             }
