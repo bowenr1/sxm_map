@@ -162,7 +162,7 @@
         // Add MapTiler layer
         const mtLayer = L.maptilerLayer({
             apiKey: key,
-            style: "c7ddf263-2f1f-4e5c-8713-4642a84b774c", //optional
+            style: "c7ddf263-2f1f-4e5c-8713-4642a84b774c", // optional
         }).addTo(map);
 
         // Add fullscreen control to the map
@@ -176,12 +176,12 @@
         };
 
         // Create layer groups for each marker type
-        var articleLayer = L.layerGroup();
-        var pictureLayer = L.layerGroup();
-        var videoLayer = L.layerGroup();
+        const articleLayer = L.layerGroup();
+        const pictureLayer = L.layerGroup();
+        const videoLayer = L.layerGroup();
 
         // Marker cluster group
-        var markers = L.markerClusterGroup();
+        const markers = L.markerClusterGroup();
 
         // Function to create markers and add them to the marker cluster group
         function createMarkers(markerData, icon) {
@@ -210,10 +210,10 @@
 
         // Function to toggle marker layers
         function toggleMarkers(type) {
-            // Remove all layers
+            // Clear all markers
             markers.clearLayers();
 
-            // Add the selected layers
+            // Add the selected markers
             switch (type) {
                 case 'all':
                     createMarkers(articleMarkers, icons.articles);
